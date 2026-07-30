@@ -21,17 +21,27 @@ let modelReady = false;
  * @param {function} onStatus - callback(message)
  */
 async function loadModel(modelPath, onStatus) {
-    onStatus('Loading ONNX model...');
+    onStatus(typeof t === 'function' ? t('loadingModel') : 'Loading ONNX model...');
     try {
-        // Prefer WASM backend
-        ort.env.wasm.numThreads = navigator.hardwareConcurrency || 4;
-        session = await ort.InferenceSession.create(modelPath, {
+        // Set WASM paths to CDN
+        ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.0/dist/';
+        ort.env.wasm.numThreads = 1; // single thread for compatibility
+
+        // Fetch model as ArrayBuffer first (more reliable for large files)
+        onStatus(typeof t === 'function' ? t('loadingModel') : 'Downloading model...');
+        const response = await fetch(modelPath);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const buffer = await response.arrayBuffer();
+
+        onStatus(typeof t === 'function' ? t('loadingModel') : 'Initializing model...');
+        session = await ort.InferenceSession.create(buffer, {
             executionProviders: ['wasm']
         });
         modelReady = true;
-        onStatus('Model loaded');
+        onStatus(typeof t === 'function' ? t('modelLoaded') : 'Model loaded');
     } catch (e) {
-        onStatus('Model load failed: ' + e.message);
+        const msg = (typeof t === 'function' ? t('modelFailed') : 'Model load failed') + ': ' + (e.message || e);
+        onStatus(msg);
         throw e;
     }
 }
