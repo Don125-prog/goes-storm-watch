@@ -8,6 +8,7 @@ const EXAMPLES_MANIFEST = 'examples/manifest.json';
 
 let currentData = null;   // { data: Float32Array, shape: number[] }
 let currentResult = null; // inference result
+let cachedManifest = null; // cached examples manifest
 
 // ── UI Refs ──────────────────────────────────────────────────
 const dropZone = document.getElementById('drop-zone');
@@ -29,14 +30,15 @@ const examplesList = document.getElementById('examples-list');
 (async function init() {
     setupUploadHandlers();
     loadExamples();
+    applyTranslations();
 
     // Pre-load model
-    showStatus('Loading model...');
+    showStatus(t('loadingModel'));
     try {
         await loadModel(MODEL_PATH, msg => setStatus(msg));
         hideStatus();
     } catch (e) {
-        setStatus('Failed to load model. Make sure resnet18_goes.onnx is in model/');
+        setStatus(t('modelFailed'));
         console.error(e);
     }
 })();
@@ -78,30 +80,30 @@ function setupUploadHandlers() {
 // ── File Handling ────────────────────────────────────────────
 async function handleFile(file) {
     if (!file.name.endsWith('.npy')) {
-        setStatus('Please upload a .npy file');
+        setStatus(t('uploadNpy'));
         return;
     }
 
-    showStatus(`Reading ${file.name}...`);
+    showStatus(`${t('reading')} ${file.name}...`);
     try {
         const buffer = await file.arrayBuffer();
         const { shape, data } = parseNpy(buffer);
 
         if (shape.length !== 3 || shape[0] !== 5) {
-            setStatus(`Invalid shape: [${shape}]. Expected (5, H, W)`);
+            setStatus(`${t('invalidShape')}: [${shape}]. ${t('expectedShape')}`);
             return;
         }
 
         currentData = { data, shape };
         await processImage();
     } catch (e) {
-        setStatus('Error reading file: ' + e.message);
+        setStatus(t('errorReading') + ': ' + e.message);
         console.error(e);
     }
 }
 
 async function handleExampleUrl(url, name) {
-    showStatus(`Downloading ${name}...`);
+    showStatus(`${t('downloading')} ${name}...`);
     try {
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -111,7 +113,7 @@ async function handleExampleUrl(url, name) {
         currentData = { data, shape };
         await processImage();
     } catch (e) {
-        setStatus('Error loading example: ' + e.message);
+        setStatus(t('errorExample') + ': ' + e.message);
         console.error(e);
     }
 }
@@ -126,17 +128,17 @@ async function processImage() {
 
     // Check model
     if (!modelReady) {
-        setStatus('Waiting for model to load...');
+        setStatus(t('waitingModel'));
         await loadModel(MODEL_PATH, msg => setStatus(msg));
     }
 
     // Run inference
-    showStatus('Running inference...');
+    showStatus(t('runningInference'));
     showProgress();
 
     currentResult = await runInference(data, shape, (done, total) => {
         const pct = Math.round(done / total * 100);
-        setProgress(pct, `${done}/${total} patches`);
+        setProgress(pct, `${done}/${total}`);
     });
 
     hideStatus();
@@ -175,45 +177,56 @@ async function loadExamples() {
     try {
         const resp = await fetch(EXAMPLES_MANIFEST);
         if (!resp.ok) {
-            examplesList.innerHTML = '<p class="loading-msg">No examples available yet. Run prepare_examples.py first.</p>';
+            examplesList.innerHTML = `<p class="loading-msg">${t('examplesNone')}</p>`;
             return;
         }
-        const manifest = await resp.json();
-
-        examplesList.innerHTML = '';
-        for (const ex of manifest) {
-            const card = document.createElement('div');
-            card.className = 'example-card';
-            card.innerHTML = `
-                <div>
-                    <div class="name">${ex.title}</div>
-                    <div class="meta">${ex.date} ${ex.hour}Z &middot; ${ex.convective_pct}% convective</div>
-                </div>
-                <div class="actions">
-                    <button class="btn-small" data-action="download" title="Download .npy">&#8595;</button>
-                    <button class="btn-small primary" data-action="load" title="Load for inference">Load</button>
-                </div>
-            `;
-
-            const fileUrl = `examples/${ex.file}`;
-
-            card.querySelector('[data-action="load"]').addEventListener('click', e => {
-                e.stopPropagation();
-                handleExampleUrl(fileUrl, ex.title);
-            });
-
-            card.querySelector('[data-action="download"]').addEventListener('click', e => {
-                e.stopPropagation();
-                const a = document.createElement('a');
-                a.href = fileUrl;
-                a.download = ex.file;
-                a.click();
-            });
-
-            examplesList.appendChild(card);
-        }
+        cachedManifest = await resp.json();
+        renderExampleCards(cachedManifest);
     } catch (e) {
-        examplesList.innerHTML = '<p class="loading-msg">Examples not available</p>';
+        examplesList.innerHTML = `<p class="loading-msg">${t('examplesError')}</p>`;
+    }
+}
+
+function reloadExamplesUI() {
+    if (cachedManifest) {
+        renderExampleCards(cachedManifest);
+    } else {
+        examplesList.innerHTML = `<p class="loading-msg">${t('examplesLoading')}</p>`;
+    }
+}
+
+function renderExampleCards(manifest) {
+    examplesList.innerHTML = '';
+    for (const ex of manifest) {
+        const card = document.createElement('div');
+        card.className = 'example-card';
+        card.innerHTML = `
+            <div>
+                <div class="name">${ex.title}</div>
+                <div class="meta">${ex.date} ${ex.hour}Z &middot; ${ex.convective_pct}% convective</div>
+            </div>
+            <div class="actions">
+                <button class="btn-small" data-action="download" title="Download .npy">${t('downloadBtn')}</button>
+                <button class="btn-small primary" data-action="load">${t('loadBtn')}</button>
+            </div>
+        `;
+
+        const fileUrl = `examples/${ex.file}`;
+
+        card.querySelector('[data-action="load"]').addEventListener('click', e => {
+            e.stopPropagation();
+            handleExampleUrl(fileUrl, ex.title);
+        });
+
+        card.querySelector('[data-action="download"]').addEventListener('click', e => {
+            e.stopPropagation();
+            const a = document.createElement('a');
+            a.href = fileUrl;
+            a.download = ex.file;
+            a.click();
+        });
+
+        examplesList.appendChild(card);
     }
 }
 

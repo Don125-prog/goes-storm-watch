@@ -9,24 +9,32 @@
 </head>
 <body>
     <header>
-        <h1>GOES Storm Watch</h1>
-        <p class="subtitle">Binary classification of convective clouds from GOES-16 IR imagery using ResNet-18</p>
+        <div class="header-row">
+            <div>
+                <h1 id="site-title">GOES Storm Watch</h1>
+                <p class="subtitle" id="site-subtitle">Binary classification of convective clouds from GOES-16 IR imagery using ResNet-18</p>
+            </div>
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+                <button class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
+            </div>
+        </div>
     </header>
 
     <main>
         <!-- Upload / Example selection -->
         <section class="panel" id="input-panel">
-            <h2>Input</h2>
+            <h2 id="input-heading">Input</h2>
             <div class="input-controls">
                 <div class="upload-area" id="drop-zone">
                     <span class="upload-icon">&#9729;</span>
-                    <p>Drag &amp; drop a <code>.npy</code> file here or click to upload</p>
-                    <p class="hint">Shape: (5, H, W) — 5 IR channels, float32, raw values</p>
+                    <p id="drop-text">Drag &amp; drop a <code>.npy</code> file here or click to upload</p>
+                    <p class="hint" id="drop-hint">Shape: (5, H, W) — 5 IR channels, float32, raw values</p>
                     <input type="file" id="file-input" accept=".npy" hidden>
                 </div>
                 <div class="examples-section">
-                    <h3>Example crops</h3>
-                    <p class="hint">Select a region to load, or download and re-upload to test</p>
+                    <h3 id="examples-heading">Example crops</h3>
+                    <p class="hint" id="examples-hint">Select a region to load, or download and re-upload to test</p>
                     <div id="examples-list" class="examples-grid">
                         <p class="loading-msg">Loading examples...</p>
                     </div>
@@ -48,22 +56,22 @@
 
         <!-- Results -->
         <section class="panel" id="results-panel" hidden>
-            <h2>Results</h2>
+            <h2 id="results-heading">Results</h2>
             <div class="results-controls">
-                <label>Overlay opacity:
+                <label id="label-opacity">Overlay opacity:
                     <input type="range" id="opacity-slider" min="0" max="100" value="50">
                 </label>
-                <label>
-                    <input type="checkbox" id="show-grid" checked> Show patch grid
+                <label id="label-grid">
+                    <input type="checkbox" id="show-grid" checked><span id="label-grid-text"> Show patch grid</span>
                 </label>
             </div>
             <div class="results-layout">
                 <div class="canvas-wrap">
-                    <h3>Input (C13 brightness temperature)</h3>
+                    <h3 id="input-canvas-title">Input (C13 brightness temperature)</h3>
                     <canvas id="canvas-input"></canvas>
                 </div>
                 <div class="canvas-wrap">
-                    <h3>Prediction overlay</h3>
+                    <h3 id="pred-canvas-title">Prediction overlay</h3>
                     <div class="canvas-stack">
                         <canvas id="canvas-base"></canvas>
                         <canvas id="canvas-overlay"></canvas>
@@ -80,31 +88,32 @@
 
         <!-- Info -->
         <section class="panel info-panel">
-            <h2>About</h2>
-            <p>
+            <h2 id="about-heading">About</h2>
+            <p id="about-text">
                 This tool performs binary classification of convective (cumulonimbus) clouds
                 from GOES-16 ABI infrared satellite imagery. The model is a ResNet-18
                 trained on 5 IR channels (C07, C09, C13, C14, C15) using combined
                 Cloud Top Phase and brightness temperature labels.
             </p>
             <details>
-                <summary>Technical details</summary>
+                <summary id="tech-summary">Technical details</summary>
                 <ul>
-                    <li><strong>Input:</strong> 5 IR channels, 64×64 patches, stride 48</li>
-                    <li><strong>Label:</strong> Phase == Ice AND CMI_C13 &lt; 220 K</li>
-                    <li><strong>Architecture:</strong> ResNet-18, conv1 adapted for 5 channels</li>
-                    <li><strong>Performance:</strong> Precision 91%, Recall 82%, F1 86%, AUC 0.993</li>
-                    <li><strong>Inference:</strong> ONNX Runtime Web (runs entirely in your browser)</li>
+                    <li id="tech-input"><strong>Input:</strong> 5 IR channels, 64×64 patches, stride 48</li>
+                    <li id="tech-label"><strong>Label:</strong> Phase == Ice AND CMI_C13 &lt; 220 K</li>
+                    <li id="tech-arch"><strong>Architecture:</strong> ResNet-18, conv1 adapted for 5 channels</li>
+                    <li id="tech-perf"><strong>Performance:</strong> Precision 91%, Recall 82%, F1 86%, AUC 0.993</li>
+                    <li id="tech-infer"><strong>Inference:</strong> ONNX Runtime Web (runs entirely in your browser)</li>
                 </ul>
             </details>
         </section>
     </main>
 
     <footer>
-        <p>Practice project &mdash; TsNIIMash / Garpix, 2026</p>
+        <p id="footer-text">Practice project &mdash; TsNIIMash / Garpix, 2026</p>
     </footer>
 
     <script src="js/npy.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/inference.js"></script>
     <script src="js/visualization.js"></script>
     <script src="js/app.js"></script>

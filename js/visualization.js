@@ -105,11 +105,11 @@ function drawPatchGrid(canvas, positions, patchSize) {
 function updateStats(result, convCount) {
     const { H, W, patchPositions, time } = result;
     document.getElementById('stat-dims').innerHTML =
-        `Size: <strong>${W} × ${H}</strong>`;
+        `${t('statSize')}: <strong>${W} × ${H}</strong>`;
     document.getElementById('stat-patches').innerHTML =
-        `Patches: <strong>${patchPositions.length}</strong>`;
+        `${t('statPatches')}: <strong>${patchPositions.length}</strong>`;
     document.getElementById('stat-conv').innerHTML =
-        `Convective: <strong>${convCount} px</strong> (${(convCount / (H * W) * 100).toFixed(1)}%)`;
+        `${t('statConv')}: <strong>${convCount} px</strong> (${(convCount / (H * W) * 100).toFixed(1)}%)`;
     document.getElementById('stat-time').innerHTML =
-        `Inference: <strong>${(time / 1000).toFixed(1)}s</strong>`;
+        `${t('statTime')}: <strong>${(time / 1000).toFixed(1)}s</strong>`;
 }
