@@ -1,72 +1,100 @@
 [
   {
-    "name": "great_plains_storm",
-    "title": "Great Plains Thunderstorms",
-    "date": "2022-06-12",
-    "hour": "21",
-    "file": "great_plains_storm.npy",
-    "gt_file": "great_plains_storm_gt.npy",
-    "shape": [
-      5,
-      256,
-      256
-    ],
-    "convective_pct": 0.0
-  },
-  {
-    "name": "midwest_convection",
-    "title": "Midwest Convective System",
-    "date": "2022-07-05",
-    "hour": "22",
-    "file": "midwest_convection.npy",
-    "gt_file": "midwest_convection_gt.npy",
-    "shape": [
-      5,
-      256,
-      256
-    ],
-    "convective_pct": 2.799999952316284
-  },
-  {
-    "name": "gulf_storms",
-    "title": "Gulf Coast Storms",
-    "date": "2022-08-15",
-    "hour": "20",
-    "file": "gulf_storms.npy",
-    "gt_file": "gulf_storms_gt.npy",
-    "shape": [
-      5,
-      256,
-      256
-    ],
-    "convective_pct": 0.30000001192092896
-  },
-  {
-    "name": "tornado_alley",
-    "title": "Tornado Alley Supercells",
+    "name": "central_us_supercells",
+    "title": "Central US Supercells",
     "date": "2019-05-20",
     "hour": "23",
-    "file": "tornado_alley.npy",
-    "gt_file": "tornado_alley_gt.npy",
+    "file": "central_us_supercells.npy",
+    "gt_file": "central_us_supercells_gt.npy",
+    "shape": [
+      5,
+      256,
+      256
+    ],
+    "convective_pct": 57.4
+  },
+  {
+    "name": "kansas_tornado_outbreak",
+    "title": "Kansas Tornado Outbreak",
+    "date": "2019-05-28",
+    "hour": "00",
+    "file": "kansas_tornado_outbreak.npy",
+    "gt_file": "kansas_tornado_outbreak_gt.npy",
+    "shape": [
+      5,
+      256,
+      256
+    ],
+    "convective_pct": 10.0
+  },
+  {
+    "name": "midwest_derecho",
+    "title": "Midwest Derecho",
+    "date": "2020-08-10",
+    "hour": "18",
+    "file": "midwest_derecho.npy",
+    "gt_file": "midwest_derecho_gt.npy",
+    "shape": [
+      5,
+      256,
+      256
+    ],
+    "convective_pct": 34.9
+  },
+  {
+    "name": "southeast_severe_storms",
+    "title": "Southeast Severe Storms",
+    "date": "2022-04-05",
+    "hour": "22",
+    "file": "southeast_severe_storms.npy",
+    "gt_file": "southeast_severe_storms_gt.npy",
+    "shape": [
+      5,
+      256,
+      256
+    ],
+    "convective_pct": 11.9
+  },
+  {
+    "name": "great_plains_convection",
+    "title": "Great Plains Convection",
+    "date": "2022-06-12",
+    "hour": "22",
+    "file": "great_plains_convection.npy",
+    "gt_file": "great_plains_convection_gt.npy",
+    "shape": [
+      5,
+      256,
+      256
+    ],
+    "convective_pct": 28.6
+  },
+  {
+    "name": "midwest_summer_storms",
+    "title": "Midwest Summer Storms",
+    "date": "2022-07-05",
+    "hour": "22",
+    "file": "midwest_summer_storms.npy",
+    "gt_file": "midwest_summer_storms_gt.npy",
+    "shape": [
+      5,
+      256,
+      256
+    ],
+    "convective_pct": 33.9
+  },
+  {
+    "name": "southeast_thunderstorms",
+    "title": "Southeast Thunderstorms",
+    "date": "2021-07-28",
+    "hour": "22",
+    "file": "southeast_thunderstorms.npy",
+    "gt_file": "southeast_thunderstorms_gt.npy",
     "shape": [
       5,
       256,
       256
     ],
     "convective_pct": 27.0
-  },
-  {
-    "name": "southeast_cells",
-    "title": "Southeast Isolated Cells",
-    "date": "2021-07-28",
-    "hour": "21",
-    "file": "southeast_cells.npy",
-    "gt_file": "southeast_cells_gt.npy",
-    "shape": [
-      5,
-      256,
-      256
-    ],
-    "convective_pct": 4.300000190734863
   }
 ]
