@@ -27,7 +27,7 @@ const TRANSLATIONS = {
         techArch: "ResNet-18, conv1 adapted for 5 channels",
         techPerf: "Precision 91%, Recall 82%, F1 86%, AUC 0.993",
         techInfer: "ONNX Runtime Web (runs entirely in your browser)",
-        footer: "Practice project — TsNIIMash / Garpix, 2026",
+        footer: "Practice project, 2026",
         loadBtn: "Load",
         downloadBtn: "↓",
         // Status messages
@@ -73,7 +73,7 @@ const TRANSLATIONS = {
         techArch: "ResNet-18, conv1 адаптирован под 5 каналов",
         techPerf: "Precision 91%, Recall 82%, F1 86%, AUC 0.993",
         techInfer: "ONNX Runtime Web (работает полностью в браузере)",
-        footer: "Практический проект — ЦНИИмаш / Гарпикс, 2026",
+        footer: "Практический проект, 2026",
         loadBtn: "Загрузить",
         downloadBtn: "↓",
         // Status messages
