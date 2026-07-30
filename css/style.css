@@ -1,0 +1,350 @@
+/* ── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e0e0e6;
+    --text-dim: #8888a0;
+    --accent: #4fc3f7;
+    --danger: #ef5350;
+    --convective: rgba(255, 60, 60, 0.7);
+    --safe: rgba(60, 180, 255, 0.15);
+    --radius: 8px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.subtitle {
+    color: var(--text-dim);
+    margin-top: 0.3rem;
+    font-size: 0.95rem;
+}
+
+/* ── Panels ──────────────────────────────────────────────── */
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+}
+
+.panel h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+}
+
+/* ── Upload ──────────────────────────────────────────────── */
+.input-controls {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.upload-area {
+    flex: 1;
+    min-width: 260px;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 2rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-area:hover, .upload-area.drag-over {
+    border-color: var(--accent);
+    background: rgba(79, 195, 247, 0.05);
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.hint {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 0.3rem;
+}
+
+code {
+    background: rgba(79, 195, 247, 0.12);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+/* ── Examples ────────────────────────────────────────────── */
+.examples-section {
+    flex: 1;
+    min-width: 260px;
+}
+
+.examples-section h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.examples-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.example-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.example-card:hover {
+    border-color: var(--accent);
+}
+
+.example-card .name {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.example-card .meta {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.example-card .actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-small {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-small:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.btn-small.primary {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.loading-msg {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* ── Status ──────────────────────────────────────────────── */
+.status-panel {
+    padding: 0.75rem 1.25rem;
+}
+
+#status-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+}
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#progress-container {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+#progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+#progress-bar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: var(--pct, 0%);
+    background: var(--accent);
+    transition: width 0.3s;
+}
+
+#progress-text {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    min-width: 3em;
+}
+
+/* ── Results ─────────────────────────────────────────────── */
+.results-controls {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.results-controls label {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.results-layout {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.canvas-wrap {
+    flex: 1;
+    min-width: 300px;
+}
+
+.canvas-wrap h3 {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+}
+
+.canvas-stack {
+    position: relative;
+}
+
+.canvas-stack canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.canvas-stack canvas:first-child {
+    position: relative;
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    background: #000;
+}
+
+#stats-bar {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+}
+
+#stats-bar span strong {
+    color: var(--text);
+}
+
+/* ── Info ─────────────────────────────────────────────────── */
+.info-panel p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+}
+
+details {
+    margin-top: 0.75rem;
+}
+
+summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 0.85rem;
+}
+
+details ul {
+    margin: 0.5rem 0 0 1.2rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
+details li {
+    margin-bottom: 0.25rem;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 700px) {
+    .input-controls, .results-layout { flex-direction: column; }
+    header h1 { font-size: 1.4rem; }
+}

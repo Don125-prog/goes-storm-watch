@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOES Storm Watch — Convective Cloud Detection</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.0/dist/ort.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>GOES Storm Watch</h1>
+        <p class="subtitle">Binary classification of convective clouds from GOES-16 IR imagery using ResNet-18</p>
+    </header>
+
+    <main>
+        <!-- Upload / Example selection -->
+        <section class="panel" id="input-panel">
+            <h2>Input</h2>
+            <div class="input-controls">
+                <div class="upload-area" id="drop-zone">
+                    <span class="upload-icon">&#9729;</span>
+                    <p>Drag &amp; drop a <code>.npy</code> file here or click to upload</p>
+                    <p class="hint">Shape: (5, H, W) — 5 IR channels, float32, raw values</p>
+                    <input type="file" id="file-input" accept=".npy" hidden>
+                </div>
+                <div class="examples-section">
+                    <h3>Example crops</h3>
+                    <p class="hint">Select a region to load, or download and re-upload to test</p>
+                    <div id="examples-list" class="examples-grid">
+                        <p class="loading-msg">Loading examples...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Status -->
+        <section class="panel status-panel" id="status-panel" hidden>
+            <div id="status-bar">
+                <span class="spinner"></span>
+                <span id="status-text">Loading model...</span>
+            </div>
+            <div id="progress-container" hidden>
+                <div id="progress-bar"></div>
+                <span id="progress-text"></span>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section class="panel" id="results-panel" hidden>
+            <h2>Results</h2>
+            <div class="results-controls">
+                <label>Overlay opacity:
+                    <input type="range" id="opacity-slider" min="0" max="100" value="50">
+                </label>
+                <label>
+                    <input type="checkbox" id="show-grid" checked> Show patch grid
+                </label>
+            </div>
+            <div class="results-layout">
+                <div class="canvas-wrap">
+                    <h3>Input (C13 brightness temperature)</h3>
+                    <canvas id="canvas-input"></canvas>
+                </div>
+                <div class="canvas-wrap">
+                    <h3>Prediction overlay</h3>
+                    <div class="canvas-stack">
+                        <canvas id="canvas-base"></canvas>
+                        <canvas id="canvas-overlay"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div id="stats-bar">
+                <span id="stat-dims"></span>
+                <span id="stat-patches"></span>
+                <span id="stat-conv"></span>
+                <span id="stat-time"></span>
+            </div>
+        </section>
+
+        <!-- Info -->
+        <section class="panel info-panel">
+            <h2>About</h2>
+            <p>
+                This tool performs binary classification of convective (cumulonimbus) clouds
+                from GOES-16 ABI infrared satellite imagery. The model is a ResNet-18
+                trained on 5 IR channels (C07, C09, C13, C14, C15) using combined
+                Cloud Top Phase and brightness temperature labels.
+            </p>
+            <details>
+                <summary>Technical details</summary>
+                <ul>
+                    <li><strong>Input:</strong> 5 IR channels, 64×64 patches, stride 48</li>
+                    <li><strong>Label:</strong> Phase == Ice AND CMI_C13 &lt; 220 K</li>
+                    <li><strong>Architecture:</strong> ResNet-18, conv1 adapted for 5 channels</li>
+                    <li><strong>Performance:</strong> Precision 91%, Recall 82%, F1 86%, AUC 0.993</li>
+                    <li><strong>Inference:</strong> ONNX Runtime Web (runs entirely in your browser)</li>
+                </ul>
+            </details>
+        </section>
+    </main>
+
+    <footer>
+        <p>Practice project &mdash; TsNIIMash / Garpix, 2026</p>
+    </footer>
+
+    <script src="js/npy.js"></script>
+    <script src="js/inference.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
