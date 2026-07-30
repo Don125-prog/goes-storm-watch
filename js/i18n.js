@@ -18,7 +18,8 @@ const TRANSLATIONS = {
         overlayOpacity: "Overlay opacity:",
         showGrid: "Show patch grid",
         inputCanvas: "Input (C13 brightness temperature)",
-        predCanvas: "Prediction overlay",
+        combinedCanvas: "Combined",
+        predCanvas: "Prediction",
         about: "About",
         aboutText: "This tool performs binary classification of convective (cumulonimbus) clouds from GOES-16 ABI infrared satellite imagery. The model is a ResNet-18 trained on 5 IR channels (C07, C09, C13, C14, C15) using combined Cloud Top Phase and brightness temperature labels.",
         techDetails: "Technical details",
@@ -64,7 +65,8 @@ const TRANSLATIONS = {
         overlayOpacity: "Прозрачность наложения:",
         showGrid: "Показать сетку патчей",
         inputCanvas: "Вход (яркостная температура C13)",
-        predCanvas: "Наложение предсказания",
+        combinedCanvas: "Совмещение",
+        predCanvas: "Предсказание",
         about: "О проекте",
         aboutText: "Инструмент выполняет бинарную классификацию конвективных (кучево-дождевых) облаков по инфракрасным спутниковым снимкам GOES-16 ABI. Модель — ResNet-18, обученная на 5 ИК-каналах (C07, C09, C13, C14, C15) с комбинированными метками фазы облачной вершины и яркостной температуры.",
         techDetails: "Технические детали",
@@ -126,6 +128,7 @@ function applyTranslations() {
     document.getElementById('label-opacity').firstChild.textContent = t('overlayOpacity') + ' ';
     document.getElementById('label-grid-text').textContent = ' ' + t('showGrid');
     document.getElementById('input-canvas-title').textContent = t('inputCanvas');
+    document.getElementById('combined-canvas-title').textContent = t('combinedCanvas');
     document.getElementById('pred-canvas-title').textContent = t('predCanvas');
 
     // About

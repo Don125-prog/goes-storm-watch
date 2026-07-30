@@ -80,6 +80,54 @@ function renderOverlay(mask, H, W, canvas, opacity, threshold) {
 }
 
 /**
+ * Render combined view: C13 grayscale + red prediction overlay baked together.
+ */
+function renderCombined(data, mask, H, W, canvas, opacity, threshold) {
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    const img = ctx.createImageData(W, H);
+
+    const c13Offset = 2 * H * W;
+
+    // Find min/max for contrast stretch
+    let min = Infinity, max = -Infinity;
+    for (let i = 0; i < H * W; i++) {
+        const v = data[c13Offset + i];
+        if (v < min) min = v;
+        if (v > max) max = v;
+    }
+    const range = max - min || 1;
+
+    for (let i = 0; i < H * W; i++) {
+        const v = data[c13Offset + i];
+        const norm = 1 - (v - min) / range;
+        const gray = Math.round(norm * 255);
+        const idx = i * 4;
+
+        const p = mask[i];
+        if (p >= threshold) {
+            // Blend: gray base + red overlay
+            const intensity = Math.min(p * 1.5, 1);
+            const r = Math.round(255 * intensity);
+            const g = Math.round(40 * (1 - intensity));
+            const b = 40;
+            const a = opacity;
+            img.data[idx]     = Math.round(gray * (1 - a) + r * a);
+            img.data[idx + 1] = Math.round(gray * (1 - a) + g * a);
+            img.data[idx + 2] = Math.round(gray * (1 - a) + b * a);
+        } else {
+            img.data[idx]     = gray;
+            img.data[idx + 1] = gray;
+            img.data[idx + 2] = gray;
+        }
+        img.data[idx + 3] = 255;
+    }
+
+    ctx.putImageData(img, 0, 0);
+}
+
+/**
  * Draw patch grid lines on the overlay canvas.
  * @param {HTMLCanvasElement} canvas
  * @param {Array} positions - [[r, c], ...]

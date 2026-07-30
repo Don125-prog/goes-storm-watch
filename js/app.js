@@ -20,6 +20,7 @@ const progressBar = document.getElementById('progress-bar');
 const progressText = document.getElementById('progress-text');
 const resultsPanel = document.getElementById('results-panel');
 const canvasInput = document.getElementById('canvas-input');
+const canvasCombined = document.getElementById('canvas-combined');
 const canvasBase = document.getElementById('canvas-base');
 const canvasOverlay = document.getElementById('canvas-overlay');
 const opacitySlider = document.getElementById('opacity-slider');
@@ -69,7 +70,7 @@ function setupUploadHandlers() {
 
     // Overlay controls
     opacitySlider.addEventListener('input', () => {
-        if (currentResult) redrawOverlay();
+        if (currentResult) { redrawCombined(); redrawOverlay(); }
     });
 
     showGridCheckbox.addEventListener('change', () => {
@@ -145,11 +146,19 @@ async function processImage() {
 
     // Render results
     renderC13(data, H, W, canvasBase);
+    redrawCombined();
     redrawOverlay();
     updateResultsStats();
 
     resultsPanel.hidden = false;
     resultsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function redrawCombined() {
+    const { mask, H, W, threshold } = currentResult;
+    const { data } = currentData;
+    const opacity = opacitySlider.value / 100;
+    renderCombined(data, mask, H, W, canvasCombined, opacity, threshold);
 }
 
 function redrawOverlay() {
